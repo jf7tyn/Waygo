@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>À propos – Waygo</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header>
+    <div class="logo-box">
+        <img src="assets/logo.png" class="logo" alt="Waygo Logo">
+        <h1>Waygo</h1>
+    </div>
+    <nav>
+        <a href="index.html">Accueil</a>
+        <a href="about.html">À propos</a>
+        <a href="blog.html">Conseils</a>
+
+        <button id="theme-toggle" class="theme-btn">🌙</button>
+    </nav>
+</header>
+
+<section class="about-hero">
+    <h2>À propos de Waygo</h2>
+    <p>Une plateforme moderne pour voyager intelligemment.</p>
+</section>
+
+<section class="content">
+    <h2>Notre mission</h2>
+    <p>
+        Waygo a été créé avec une idée simple : rendre la planification de voyage
+        rapide, moderne et agréable. Nous combinons des données provenant de partenaires
+        fiables comme Booking.com pour offrir une expérience intuitive et intelligente.
+    </p>
+</section>
+
+<section class="facts">
+    <div class="fact-card">
+        <h3>+10K hôtels</h3>
+        <p>Accès aux principales plateformes d’hébergement.</p>
+    </div>
+    <div class="fact-card">
+        <h3>IA intégrée</h3>
+        <p>Recommandations personnalisées selon vos préférences.</p>
+    </div>
+    <div class="fact-card">
+        <h3>100% transparent</h3>
+        <p>Tarifs mis à jour et fiables.</p>
+    </div>
+</section>
+
+<section class="content">
+    <h2>Notre vision</h2>
+    <p>
+        Nous souhaitons devenir l’un des outils les plus utilisés par les voyageurs
+        du monde entier, en combinant simplicité, personnalisation et technologie.
+    </p>
+</section>
+
+<footer>
+    © 2025 Waygo – Tous droits réservés.
+</footer>
+
+</body>
+<script>
+const toggle = document.getElementById("theme-toggle");
+
+if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark");
+    toggle.textContent = "☀️";
+}
+
+toggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+
+    if (document.body.classList.contains("dark")) {
+        localStorage.setItem("theme", "dark");
+        toggle.textContent = "☀️";
+    } else {
+        localStorage.setItem("theme", "light");
+        toggle.textContent = "🌙";
+    }
+});
+</script>
+</html>
