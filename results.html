@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Résultats – Waygo</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
 <header>
     <a href="index.html" class="logo">
-        <img src="logo.png" alt="Waygo" />
+        <img src="logo.png" alt="Waygo">
         <span>Waygo</span>
     </a>
 </header>
@@ -27,96 +27,116 @@
 </section>
 
 <script>
-// --- 1. Получаем параметры из URL ---
+// --- Получение параметров ---
 const url = new URL(window.location.href);
 const cityName = url.searchParams.get("city");
 
-// Заголовок страницы
 document.getElementById("title").innerText = `Résultats pour ${cityName.toUpperCase()}`;
 
-// --- 2. Получаем IATA код города ---
+// --- Получаем IATA код ---
 async function getCityCode(city) {
-    const tokenRes = await fetch("/.netlify/functions/token");
-    const tokenData = await tokenRes.json();
+    const tok = await fetch("/.netlify/functions/token");
+    const { access_token } = await tok.json();
 
     const res = await fetch(
         `https://test.api.amadeus.com/v1/reference-data/locations?subType=CITY&keyword=${city}`,
-        {
-            headers: {
-                Authorization: `Bearer ${tokenData.access_token}`
-            }
-        }
+        { headers: { Authorization: `Bearer ${access_token}` }}
     );
 
     const json = await res.json();
+
     return json.data?.[0]?.iataCode || null;
 }
 
-// --- 3. Загружаем рейсы ---
-async function loadFlights(code) {
+// --- Получаем координаты ---
+async function getCoordinates(city) {
+    const tok = await fetch("/.netlify/functions/token");
+    const { access_token } = await tok.json();
+
+    const res = await fetch(
+        `https://test.api.amadeus.com/v1/reference-data/locations?subType=CITY&keyword=${city}`,
+        { headers: { Authorization: `Bearer ${access_token}` }}
+    );
+
+    const json = await res.json();
+    const loc = json.data?.[0];
+
+    if (!loc) return null;
+
+    return {
+        lat: loc.geoCode.latitude,
+        lon: loc.geoCode.longitude
+    };
+}
+
+// --- Загружаем рейсы ---
+async function loadFlights(iata) {
     const box = document.getElementById("flights");
     box.innerHTML = `<div class="loader"></div>`;
 
-    const res = await fetch(`/.netlify/functions/flight?city=${code}`);
-    const json = await res.json();
+    const res = await fetch(`/.netlify/functions/flight?city=${iata}`);
+    const data = await res.json();
 
     box.innerHTML = "";
 
-    if (!json.data) {
+    if (!data.data) {
         box.innerHTML = "<p>Aucun vol trouvé.</p>";
         return;
     }
 
-    json.data.forEach(flight => {
+    data.data.forEach(f => {
         box.innerHTML += `
             <div class="card">
-                <p><strong>Prix:</strong> ${flight.price.total} €</p>
-                <p><strong>Compagnie:</strong> ${flight.validatingAirlineCodes}</p>
+                <p><b>Prix:</b> ${f.price.total}€</p>
+                <p><b>Compagnie:</b> ${f.validatingAirlineCodes}</p>
             </div>
         `;
     });
 }
 
-// --- 4. Загружаем отели ---
-async function loadHotels(code) {
+// --- Загружаем отели ---
+async function loadHotels(lat, lon) {
     const box = document.getElementById("hotels");
     box.innerHTML = `<div class="loader"></div>`;
 
-    const res = await fetch(`/.netlify/functions/hotels?city=${code}`);
-    const json = await res.json();
+    const res = await fetch(`/.netlify/functions/hotels?lat=${lat}&lon=${lon}`);
+    const data = await res.json();
 
     box.innerHTML = "";
 
-    if (!json.data) {
+    if (!data.data) {
         box.innerHTML = "<p>Aucun hôtel trouvé.</p>";
         return;
     }
 
-    json.data.forEach(hotel => {
-        const info = hotel.hotel;
-        const offer = hotel.offers[0];
-
+    data.data.forEach(h => {
         box.innerHTML += `
             <div class="card">
-                <p><strong>${info.name}</strong></p>
-                <p>📍 ${info.address.cityName}</p>
-                <p><strong>${offer.price.total} €</strong> / nuit</p>
+                <p><b>${h.hotel.name}</b></p>
+                <p>📍 ${h.hotel.address.cityName}</p>
+                <p><b>${h.offers[0].price.total}€</b> / nuit</p>
             </div>
         `;
     });
 }
 
-// --- 5. Главная логика ---
+// --- ГЛАВНЫЙ ЗАПУСК ---
 (async () => {
-    const code = await getCityCode(cityName); // Пример: PAR → PAR; Tokyo → TYO; Madrid → MAD
+    const iata = await getCityCode(cityName);
+    const coords = await getCoordinates(cityName);
 
-    if (!code) {
+    if (!iata) {
         alert("Ville inconnue");
         return;
     }
 
-    loadFlights(code);
-    loadHotels(code);
+    loadFlights(iata);
+
+    if (coords) {
+        loadHotels(coords.lat, coords.lon);
+    } else {
+        document.getElementById("hotels").innerHTML = "Aucun hôtel trouvé.";
+    }
 })();
 </script>
 
