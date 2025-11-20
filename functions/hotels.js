@@ -2,22 +2,25 @@ export async function handler(event, context) {
     const CLIENT_ID = "ZDogSkh8LUuaB7SZAVKh6P7eNX1rsZ28";
     const CLIENT_SECRET = "GiksiAfQzHdSMvbG";
 
-    const cityCode = event.queryStringParameters.city;
+    let cityCode = event.queryStringParameters.city;
+
+    if (cityCode.toUpperCase() === "PARIS") cityCode = "PAR";
+    if (cityCode.toUpperCase() === "TOKYO") cityCode = "TYO";
+    if (cityCode.toUpperCase() === "LONDON") cityCode = "LON";
 
     try {
-        // Токен
         const tokenRes = await fetch("https://test.api.amadeus.com/v1/security/oauth2/token", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: `grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`
         });
+
         const tokenData = await tokenRes.json();
         const accessToken = tokenData.access_token;
 
-        // Гостиницы
         const hotelRes = await fetch(
             `https://test.api.amadeus.com/v2/shopping/hotel-offers?cityCode=${cityCode}`,
-            { headers: { Authorization: `Bearer ${accessToken}`}}
+            { headers: { Authorization: `Bearer ${accessToken}` }}
         );
 
         const data = await hotelRes.json();
