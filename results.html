@@ -11,7 +11,7 @@
 
 <header>
     <a href="index.html" class="logo">
-        <img src="logo.png" alt="Waygo">
+        <img src="logo.png">
         <span>Waygo</span>
     </a>
 </header>
@@ -20,123 +20,95 @@
     <h1 id="title">Résultats</h1>
 
     <div class="category"><h2>✈️ Vols recommandés</h2></div>
-    <div id="flights" class="results-box"></div>
+    <div id="flights" class="results-box"><div class="loader"></div></div>
 
     <div class="category"><h2>🏨 Hôtels recommandés</h2></div>
-    <div id="hotels" class="results-box"></div>
+    <div id="hotels" class="results-box"><div class="loader"></div></div>
 </section>
 
 <script>
-// --- Получение параметров ---
 const url = new URL(window.location.href);
 const cityName = url.searchParams.get("city");
 
-document.getElementById("title").innerText = `Résultats pour ${cityName.toUpperCase()}`;
+document.getElementById("title").innerText = "Résultats pour " + cityName;
 
-// --- Получаем IATA код ---
+// === GET IATA ===
 async function getCityCode(city) {
-    const tok = await fetch("/.netlify/functions/token");
-    const { access_token } = await tok.json();
+    const t = await fetch("/.netlify/functions/token");
+    const { access_token } = await t.json();
 
-    const res = await fetch(
-        `https://test.api.amadeus.com/v1/reference-data/locations?subType=CITY&keyword=${city}`,
+    const r = await fetch(
+        `https://api.amadeus.com/v1/reference-data/locations?subType=CITY&keyword=${city}`,
         { headers: { Authorization: `Bearer ${access_token}` }}
     );
 
-    const json = await res.json();
-
-    return json.data?.[0]?.iataCode || null;
+    const data = await r.json();
+    return data?.data?.[0]?.iataCode || null;
 }
 
-// --- Получаем координаты ---
+// === GET COORDS ===
 async function getCoordinates(city) {
-    const tok = await fetch("/.netlify/functions/token");
-    const { access_token } = await tok.json();
+    const t = await fetch("/.netlify/functions/token");
+    const { access_token } = await t.json();
 
-    const res = await fetch(
-        `https://test.api.amadeus.com/v1/reference-data/locations?subType=CITY&keyword=${city}`,
+    const r = await fetch(
+        `https://api.amadeus.com/v1/reference-data/locations?subType=CITY&keyword=${city}`,
         { headers: { Authorization: `Bearer ${access_token}` }}
     );
 
-    const json = await res.json();
-    const loc = json.data?.[0];
-
-    if (!loc) return null;
-
-    return {
-        lat: loc.geoCode.latitude,
-        lon: loc.geoCode.longitude
-    };
+    const data = await r.json();
+    const loc = data.data?.[0];
+    return loc ? { lat: loc.geoCode.latitude, lon: loc.geoCode.longitude } : null;
 }
 
-// --- Загружаем рейсы ---
+// === LOAD FLIGHTS ===
 async function loadFlights(iata) {
-    const box = document.getElementById("flights");
-    box.innerHTML = `<div class="loader"></div>`;
-
     const res = await fetch(`/.netlify/functions/flight?city=${iata}`);
-    const data = await res.json();
+    const json = await res.json();
 
+    const box = document.getElementById("flights");
     box.innerHTML = "";
 
-    if (!data.data) {
-        box.innerHTML = "<p>Aucun vol trouvé.</p>";
-        return;
-    }
+    if (!json.data) return box.innerHTML = "<p>Aucun vol trouvé.</p>";
 
-    data.data.forEach(f => {
+    json.data.forEach(f => {
         box.innerHTML += `
-            <div class="card">
-                <p><b>Prix:</b> ${f.price.total}€</p>
-                <p><b>Compagnie:</b> ${f.validatingAirlineCodes}</p>
-            </div>
-        `;
+        <div class="card">
+            <p><b>Prix:</b> ${f.price.total}€</p>
+            <p><b>Compagnie:</b> ${f.validatingAirlineCodes}</p>
+        </div>`;
     });
 }
 
-// --- Загружаем отели ---
+// === LOAD HOTELS ===
 async function loadHotels(lat, lon) {
-    const box = document.getElementById("hotels");
-    box.innerHTML = `<div class="loader"></div>`;
-
     const res = await fetch(`/.netlify/functions/hotels?lat=${lat}&lon=${lon}`);
-    const data = await res.json();
+    const json = await res.json();
 
+    const box = document.getElementById("hotels");
     box.innerHTML = "";
 
-    if (!data.data) {
-        box.innerHTML = "<p>Aucun hôtel trouvé.</p>";
-        return;
-    }
+    if (!json.data) return box.innerHTML = "<p>Aucun hôtel trouvé.</p>";
 
-    data.data.forEach(h => {
+    json.data.forEach(h => {
         box.innerHTML += `
-            <div class="card">
-                <p><b>${h.hotel.name}</b></p>
-                <p>📍 ${h.hotel.address.cityName}</p>
-                <p><b>${h.offers[0].price.total}€</b> / nuit</p>
-            </div>
-        `;
+        <div class="card">
+            <p><b>${h.hotel.name}</b></p>
+            <p>📍 ${h.hotel.address.cityName}</p>
+            <p><b>${h.offers[0].price.total}€</b> / nuit</p>
+        </div>`;
     });
 }
 
-// --- ГЛАВНЫЙ ЗАПУСК ---
+// === MAIN ===
 (async () => {
     const iata = await getCityCode(cityName);
     const coords = await getCoordinates(cityName);
 
-    if (!iata) {
-        alert("Ville inconnue");
-        return;
-    }
+    if (!iata) return alert("Ville inconnue.");
 
     loadFlights(iata);
-
-    if (coords) {
-        loadHotels(coords.lat, coords.lon);
-    } else {
-        document.getElementById("hotels").innerHTML = "Aucun hôtel trouvé.";
-    }
+    coords ? loadHotels(coords.lat, coords.lon) : null;
 })();
 </script>
 
