@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waygo – Planificateur de Voyages</title>
+    <link rel="stylesheet" href="/styles.css">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+    <div class="logo-box">
+        <img src="assets/logo.png" class="logo" alt="Waygo Logo">
+
+        <img src="logo.png" class="logo" alt="Waygo Logo">
+ 
+        <h1>Waygo</h1>
+    </div>
+    <nav>
+        <a href="index.html">Accueil</a>
+        <a href="about.html">À propos</a>
+        <a href="blog.html">Conseils</a>
+        <a href="results.html">Resultas</a>
+                <a href="search.html">Rechercher</a>
+
+        <button id="theme-toggle" class="theme-btn">🌙</button>
+    </nav>
+</header>
+
+<section class="hero">
+    <h2>Planifiez vos voyages facilement</h2>
+    <p>Explorez les meilleures offres d’hôtels, vols et activités grâce à notre moteur intelligent.</p>
+    <a href="about.html" class="btn-primary">En savoir plus</a>
+</section>
+
+<section class="section-title">
+    <h2>Nos Services</h2>
+</section>
+
+<section class="features">
+    <div class="card">
+        <h3>Hôtels</h3>
+        <p>Comparez des milliers d’hébergements partout dans le monde.</p>
+    </div>
+    <div class="card">
+        <h3>Vols</h3>
+        <p>Trouvez les billets au meilleur prix selon vos dates.</p>
+    </div>
+    <div class="card">
+        <h3>Activités</h3>
+        <p>Découvrez des expériences uniques dans chaque ville.</p>
+    </div>
+</section>
+
+<section class="section-title">
+    <h2>Pourquoi Waygo ?</h2>
+</section>
+
+<section class="benefits">
+    <div class="benefit">
+        <h4>IA intelligente</h4>
+        <p>Des recommandations personnalisées selon vos goûts.</p>
+    </div>
+    <div class="benefit">
+        <h4>Partenaires fiables</h4>
+        <p>Offres validées par Booking.com, Skyscanner et d’autres.</p>
+    </div>
+    <div class="benefit">
+        <h4>Prix transparents</h4>
+        <p>Aucune surprise, vous voyez les tarifs réels.</p>
+    </div>
+</section>
+
+<footer>
+    © 2025 Waygo – Tous droits réservés.
+</footer>
+
+</body>
+<script>
+const toggle = document.getElementById("theme-toggle");
+
+if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark");
+    toggle.textContent = "☀️";
+}
+
+toggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+
+    if (document.body.classList.contains("dark")) {
+        localStorage.setItem("theme", "dark");
+        toggle.textContent = "☀️";
+    } else {
+        localStorage.setItem("theme", "light");
+        toggle.textContent = "🌙";
+    }
+});
+</script>
+</html>
+
+</html>

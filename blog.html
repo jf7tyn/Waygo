@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conseils de Voyage – Waygo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+    <div class="logo-box">
+        <img src="logo.png" class="logo" alt="Waygo Logo">
+        <h1>Waygo</h1>
+    </div>
+    <nav>
+        <a href="index.html">Accueil</a>
+        <a href="about.html">À propos</a>
+        <a href="blog.html">Conseils</a>
+        <button id="theme-toggle" class="theme-btn">🌙</button>
+    </nav>
+</header>
+
+<section class="blog-hero">
+    <h2>Exemple de Résultat – Tokyo</h2>
+    <p>Concept visuel illustrant comment Waygo affichera les résultats en utilisant les API Booking, Skyscanner et Google Places.</p>
+</section>
+
+<section class="content">
+    <h2>🏨 Hôtel recommandé (API Booking.com)</h2>
+
+    <div class="hotel-box">
+        <img src="tokyo.jpg" class="hotel-img" alt="Tokyo Hotel">
+        <div>
+            <h3>Hotel Groove Shinjuku</h3>
+            <p><strong>Note :</strong> 9.1 / 10</p>
+            <p><strong>Prix :</strong> 112 € / nuit</p>
+            <p>Situé au cœur de Shinjuku, à proximité de restaurants, bars et attractions touristiques.</p>
+        </div>
+    </div>
+
+    <hr style="margin: 40px 0;">
+    
+    <h2>✈️ Exemple de Vol (API Skyscanner)</h2>
+    <div class="info-box">
+        <p><strong>Départ :</strong> Paris (CDG)</p>
+        <p><strong>Arrivée :</strong> Tokyo (HND)</p>
+        <p><strong>Prix :</strong> 497 € aller-retour</p>
+        <p><strong>Compagnie :</strong> Qatar Airways</p>
+    </div>
+
+    <hr style="margin: 40px 0;">
+
+    <h2>🎌 Activités à proximité (API Google Places)</h2>
+    <div class="activities">
+
+        <div class="activity-card">
+            <h4>Shinjuku Gyoen National Garden</h4>
+            <p>★★★★★ (4.8)</p>
+            <p>Prix : 4 €</p>
+        </div>
+
+        <div class="activity-card">
+            <h4>Tōchō – Metropolitan Government Tower</h4>
+            <p>★★★★★ (4.7)</p>
+            <p>Prix : Gratuit</p>
+        </div>
+
+        <div class="activity-card">
+            <h4>Quartier Kabukicho</h4>
+            <p>★★★★☆ (4.4)</p>
+            <p>Prix : Gratuit</p>
+        </div>
+
+    </div>
+
+    <hr style="margin: 40px 0;">
+
+    <h2>🍣 Restaurants autour (API Google Places)</h2>
+    <div class="restaurants">
+
+        <div class="restaurant-card">
+            <h4>Sushi Zanmai Shinjuku</h4>
+            <p>★★★★★ (4.8)</p>
+            <p>Prix moyen : 18–25 €</p>
+        </div>
+
+        <div class="restaurant-card">
+            <h4>Ichiran Ramen</h4>
+            <p>★★★★★ (4.7)</p>
+            <p>Prix moyen : 10–15 €</p>
+        </div>
+
+        <div class="restaurant-card">
+            <h4>Gyukatsu Motomura</h4>
+            <p>★★★★☆ (4.5)</p>
+            <p>Prix moyen : 12–20 €</p>
+        </div>
+
+    </div>
+
+</section>
+
+<footer>
+    © 2025 Waygo – Tous droits réservés.
+</footer>
+
+
+<script>
+const toggle = document.getElementById("theme-toggle");
+
+if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark");
+    toggle.textContent = "☀️";
+}
+
+toggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+
+    if (document.body.classList.contains("dark")) {
+        localStorage.setItem("theme", "dark");
+        toggle.textContent = "☀️";
+    } else {
+        localStorage.setItem("theme", "light");
+        toggle.textContent = "🌙";
+    }
+});
+</script>
+
+</body>
+</html>

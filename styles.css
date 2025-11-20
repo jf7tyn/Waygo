@@ -1,0 +1,427 @@
+/* ==========================
+   GLOBAL
+========================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Inter", Arial, sans-serif;
+    background: #f3f6fc; /* новый светлый фон */
+    color: #1d1f23;
+    line-height: 1.6;
+}
+
+/* ==========================
+   HEADER
+========================== */
+header {
+    background: #ffffff; /* белый, чтобы логотип не сливался */
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #1d1f23;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #0d6efd; /* фирменный синий */
+}
+
+header nav a {
+    color: #1d1f23;
+    margin-left: 25px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 17px;
+    transition: 0.2s;
+}
+
+header nav a:hover {
+    color: #0d6efd;
+}
+
+/* LOGO */
+.logo-box {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logo {
+    height: 65px;  /* увеличенный логотип */
+    width: auto;
+    object-fit: contain;
+    transition: 0.25s;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+/* ==========================
+   HERO (HOME)
+========================== */
+.hero {
+    padding: 140px 20px;
+    text-align: center;
+    background: linear-gradient(to bottom, rgba(13,110,253,0.85), rgba(13,110,253,0.4)),
+                url('assets/hero.jpg') center/cover no-repeat;
+    color: white;
+}
+
+.hero h2 {
+    font-size: 42px;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.hero p {
+    font-size: 20px;
+    max-width: 600px;
+    margin: auto;
+    opacity: 0.95;
+}
+
+/* CTA BUTTON */
+.btn-primary {
+    display: inline-block;
+    padding: 12px 25px;
+    background: white;
+    color: #0d6efd;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 15px;
+    transition: 0.2s;
+}
+
+.btn-primary:hover {
+    opacity: 0.85;
+}
+
+/* ==========================
+   SECTION TITLE
+========================== */
+.section-title {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.section-title h2 {
+    font-size: 32px;
+    color: #0d6efd;
+}
+
+/* ==========================
+   FEATURES (HOME)
+========================== */
+.features {
+    display: flex;
+    gap: 30px;
+    padding: 60px 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 14px;
+    width: 260px;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    transition: 0.25s;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+.card h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #0d6efd;
+}
+
+.card p {
+    font-size: 15px;
+    opacity: 0.85;
+}
+
+/* ==========================
+   BENEFITS (HOME)
+========================== */
+.benefits {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding: 40px;
+    flex-wrap: wrap;
+}
+
+.benefit {
+    background: #ffffff;
+    padding: 25px 30px;
+    border-radius: 12px;
+    width: 260px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.benefit h4 {
+    color: #0d6efd;
+    margin-bottom: 10px;
+}
+
+/* ==========================
+   ABOUT HERO
+========================== */
+.about-hero {
+    background: #0d6efd;
+    color: white;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.about-hero h2 {
+    font-size: 40px;
+}
+
+.about-hero p {
+    opacity: 0.9;
+    font-size: 18px;
+}
+
+/* ==========================
+   CONTENT BLOCKS
+========================== */
+.content {
+    max-width: 900px;
+    margin: 60px auto;
+    background: #ffffff;
+    padding: 40px 45px;
+    border-radius: 14px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+}
+
+.content h2 {
+    font-size: 32px;
+    color: #0d6efd;
+    margin-bottom: 20px;
+}
+
+.content ul {
+    margin-top: 15px;
+    padding-left: 25px;
+}
+
+.content ul li {
+    margin: 8px 0;
+    font-size: 18px;
+}
+
+/* ==========================
+   FACTS (ABOUT PAGE)
+========================== */
+.facts {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding: 40px;
+    flex-wrap: wrap;
+}
+
+.fact-card {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    width: 220px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+}
+
+.fact-card h3 {
+    color: #0d6efd;
+    margin-bottom: 8px;
+}
+
+/* ==========================
+   BLOG HERO
+========================== */
+.blog-hero {
+    background: linear-gradient(135deg, #0d6efd, #4aa0ff);
+    color: white;
+    padding: 100px 20px;
+    text-align: center;
+}
+
+.blog-hero h2 {
+    font-size: 38px;
+}
+
+/* ==========================
+   RELATED POSTS
+========================== */
+.related {
+    max-width: 900px;
+    margin: 40px auto;
+}
+
+.related h3 {
+    font-size: 26px;
+    color: #0d6efd;
+    margin-bottom: 20px;
+}
+
+.related-grid {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.related-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 260px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    transition: 0.2s;
+}
+
+.related-card:hover {
+    transform: translateY(-5px);
+}
+
+/* ==========================
+   DARK THEME
+========================== */
+
+body.dark {
+    background: #0d1117;
+    color: #e6e6e6;
+}
+
+body.dark header {
+    background: #161b22;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+body.dark nav a {
+    color: #e6e6e6;
+}
+
+body.dark .hero {
+    background: linear-gradient(to bottom, rgba(13,110,253,0.6), rgba(13,110,253,0.3)),
+                url('assets/hero.jpg') center/cover no-repeat;
+}
+
+body.dark .card,
+body.dark .benefit,
+body.dark .fact-card,
+body.dark .related-card,
+body.dark .content {
+    background: #161b22;
+    color: #e6e6e6;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.6);
+}
+
+body.dark footer {
+    background: #161b22;
+}
+
+/* LOGO SHADOW */
+body.dark .logo {
+    filter: drop-shadow(0 0 4px rgba(255,255,255,0.4));
+}
+
+/* ==========================
+   FOOTER
+========================== */
+footer {
+    text-align: center;
+    padding: 25px;
+    background: #0d6efd;
+    color: white;
+    margin-top: 60px;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+}
+
+/* ==========================
+   THEME BUTTON
+========================== */
+.theme-btn {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    margin-left: 15px;
+    transition: 0.2s;
+}
+
+.theme-btn:hover {
+    opacity: 0.7;
+}
+/* HOTEL BOX */
+.hotel-box {
+    display: flex;
+    gap: 25px;
+    margin-top: 20px;
+    align-items: center;
+}
+
+.hotel-img {
+    width: 260px;
+    height: 170px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+}
+
+/* INFO BOX */
+.info-box p {
+    margin: 6px 0;
+}
+
+/* ACTIVITIES */
+.activities, .restaurants {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.activity-card, .restaurant-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    width: 260px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: 0.2s;
+}
+
+.activity-card:hover,
+.restaurant-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* DARK MODE SUPPORT */
+body.dark .activity-card,
+body.dark .restaurant-card {
+    background: #161b22;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.6);
+}
+

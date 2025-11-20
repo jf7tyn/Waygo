@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche – Waygo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+    <div class="logo-box">
+        <img src="logo.png" class="logo">
+        <h1>Waygo</h1>
+    </div>
+</header>
+
+<section class="content">
+    <h2>🔍 Rechercher une destination</h2>
+    <p>Entrez votre destination et laissez Waygo trouver les meilleurs vols et hôtels.</p>
+
+    <!-- AUTOCOMPLETE -->
+    <form action="results.html" method="GET" class="search-form">
+        <div class="autocomplete">
+            <input type="text" id="searchCity" name="city" placeholder="Tokyo, Paris, Dubai…" autocomplete="off" required>
+            <div id="suggestions"></div>
+        </div>
+
+        <input type="number" name="budget" placeholder="Budget (€)" required>
+        <button class="btn-primary">Rechercher</button>
+    </form>
+</section>
+
+<script>
+/* ====== АВТОДОПОЛНЕНИЕ через SERVERLESS токен ====== */
+
+let timer;
+document.getElementById("searchCity").addEventListener("keyup", () => {
+    clearTimeout(timer);
+    timer = setTimeout(loadSuggestions, 400);
+});
+
+async function getToken() {
+    const res = await fetch("/.netlify/functions/token");
+    const data = await res.json();
+    return data.access_token;
+}
+
+async function loadSuggestions() {
+    const keyword = searchCity.value.trim();
+    if (keyword.length < 2) return;
+
+    const token = await getToken();
+
+    const res = await fetch(
+        `https://test.api.amadeus.com/v1/reference-data/locations?subType=CITY&keyword=${keyword}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    const json = await res.json();
+    const box = document.getElementById("suggestions");
+    box.innerHTML = "";
+
+    json.data?.forEach(city => {
+        const div = document.createElement("div");
+        div.className = "suggest-item";
+        div.textContent = `${city.name} (${city.iataCode})`;
+        div.onclick = () => {
+            document.getElementById("searchCity").value = city.name;
+            box.innerHTML = "";
+        };
+        box.appendChild(div);
+    });
+}
+</script>
+
+</body>
+</html>

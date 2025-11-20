@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultats – Waygo</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        .results-title {
+            font-size: 32px;
+            text-align: center;
+            color: #0d6efd;
+            margin-top: 20px;
+        }
+
+        .sub-title {
+            font-size: 22px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: #0d6efd;
+        }
+
+        .flight-card, .hotel-card {
+            padding: 20px;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            transition: 0.2s;
+        }
+
+        .flight-card:hover, .hotel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .hotel-img {
+            width: 100%;
+            height: 160px;
+            border-radius: 14px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .loader {
+            margin: 30px auto;
+            border: 5px solid #ddd;
+            border-top: 5px solid #0d6efd;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo-box">
+        <img src="logo.png" class="logo">
+        <h1>Waygo</h1>
+    </div>
+</header>
+
+<section class="content">
+
+    <h2 class="results-title">
+        Résultats pour <span id="city-name"></span>
+    </h2>
+
+    <!-- FLIGHTS -->
+    <h3 class="sub-title">✈️ Vols recommandés</h3>
+    <div id="flights"><div class="loader"></div></div>
+
+    <!-- HOTELS -->
+    <h3 class="sub-title">🏨 Hôtels recommandés</h3>
+    <div id="hotels"><div class="loader"></div></div>
+
+</section>
+
+<script>
+/* ========== 1. Получение города из параметров URL ========== */
+const params = new URLSearchParams(window.location.search);
+const city = params.get("city");
+document.getElementById("city-name").textContent = city;
+
+/* ========== 2. Получение токена через backend (Netlify) ========== */
+async function getToken() {
+    const res = await fetch("/.netlify/functions/token");
+    const data = await res.json();
+    return data.access_token;
+}
+
+/* ========== 3. Получить IATA-код города ========== */
+async function findCityCode(token, city) {
+    const res = await fetch(
+        `https://test.api.amadeus.com/v1/reference-data/locations?subType=CITY&keyword=${city}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    const json = await res.json();
+    return json.data?.[0]?.iataCode || "TYO"; // fallback
+}
+
+/* ========== 4. Получить перелёты ========== */
+async function loadFlights(token, code) {
+    const res = await fetch(
+        `https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=PAR&destinationLocationCode=${code}&departureDate=2025-03-12&adults=1&max=3`,
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    const json = await res.json();
+    const box = document.getElementById("flights");
+    box.innerHTML = "";
+
+    json.data?.forEach(f => {
+        box.innerHTML += `
+            <div class="flight-card">
+                <h4>Paris → ${city}</h4>
+                <p><strong>Compagnie:</strong> ${f.validatingAirlineCodes[0]}</p>
+                <p><strong>Prix:</strong> ${f.price.total} €</p>
+            </div>
+        `;
+    });
+}
+
+/* ========== 5. Получить отели ========== */
+async function loadHotels(token, code) {
+    const res = await fetch(
+        `https://test.api.amadeus.com/v2/shopping/hotel-offers?cityCode=${code}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    const json = await res.json();
+    const box = document.getElementById("hotels");
+    box.innerHTML = "";
+
+    json.data?.slice(0,3).forEach(h => {
+        box.innerHTML += `
+            <div class="hotel-card">
+                <img src="${h.hotel.media?.[0]?.uri || 'assets/no-photo.jpg'}" class="hotel-img">
+                <h4>${h.hotel.name}</h4>
+                <p><strong>Prix:</strong> ${h.offers[0]?.price.total || "?"} € / nuit</p>
+                <p><strong>Note:</strong> ${h.hotel.rating || "N/A"}</p>
+            </div>
+        `;
+    });
+}
+
+/* ========== 6. Запуск при загрузке страницы ========== */
+(async () => {
+    const token = await getToken();
+    const code = await findCityCode(token, city);
+
+    loadFlights(token, code);
+    loadHotels(token, code);
+})();
+</script>
+
+</body>
+</html>
